@@ -1,8 +1,18 @@
 {
   "compilerOptions": {
     "target": "es5",
+
+    // "module": "commonjs",
+
+    /* Base directory to resolve non-absolute module names. [Relative to tsconfig.json] */
     "baseUrl": "../src",
+
+     /* Redirect output structure to the directory. [Relative to tsconfig.json] */
     "outDir": "../dist",
+
+    /* Concatenate and emit output to single file. [Relative to tsconfig.json] */
+    /* TS6082: Only 'amd' and 'system' modules are supported alongside --outFile. */
+    // "outFile": "../dist/main.js",
   },
   "include": [
     "../src/**/*",
