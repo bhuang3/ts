@@ -1,10 +1,32 @@
 {
+  /* All relative paths found in the configuration file will be resolved relative to the configuration file they originated in. */
+  // "extends": "",
+
+  /*
+   * rootDirs (and so are paths, baseurl, moduleResolution) do not have any effect on output. they are just
+   * ways to get the compiler to know what is the meaning of modules.
+   */
   "compilerOptions": {
     "target": "es5",
 
+    /* Base directory to resolve non-absolute module names. [Relative to tsconfig.json] */
+    /* `baseUrl` is required when `paths` is specified. */
+
+    /* TODO */
     // "module": "commonjs",
 
-    /* Base directory to resolve non-absolute module names. [Relative to tsconfig.json] */
+    /* If not specified, the default is Classic for --module AMD | System | ES2015 or Node otherwise */
+    /*
+     * For `node`, TypeScript will also use a field in package.json named "types" to mirror the purpose of "main"
+     */
+    // "moduleResolution": "node",
+
+    /* All module imports with non-relative names are assumed to be relative to the baseUrl */
+    /* This must be specified if `paths` is */
+    /*
+     * https://stackoverflow.com/questions/50593774/cannot-find-typescript-module-even-though-tsc-successfully-manages-to-resolve-it
+     * https://github.com/Microsoft/TypeScript/issues/15479
+     */
     "baseUrl": "../src",
 
      /* Redirect output structure to the directory. [Relative to tsconfig.json] */
@@ -13,9 +35,37 @@
     /* Concatenate and emit output to single file. [Relative to tsconfig.json] */
     /* TS6082: Only 'amd' and 'system' modules are supported alongside --outFile. */
     // "outFile": "../dist/main.js",
+
+    /* This mapping is relative to `baseUrl` */
+    "paths": {
+      "thor": [ "packages/thor/thor.ts" ],
+    },
+
+    /* https://www.typescriptlang.org/docs/handbook/module-resolution.html#virtual-directories-with-rootdirs */
+    /*
+     * It's relative to `tsconfig.json` rather than `baseUrl`
+     *
+     * It specifies a list of roots whose contents are expected to merge at run-time.
+     *
+     * Every time the compiler sees a relative module import in a subfolder of one of the rootDirs,
+     * it will attempt to look for this import in each of the entries of rootDirs.
+     */
+    "rootDirs": [
+      "../src/packages/thor",
+      "../src/packages/mjolnir",
+    ],
+
+    /* https://stackoverflow.com/questions/39826848/typescript-2-0-types-field-in-tsconfig-json */
+    // "typeRoots": [
+    //   "../type",
+    // ],
+    // "types": [
+    //   "jquery",
+    // ],
   },
   "include": [
     "../src/**/*",
+    "../src/packages/**/*",
   ],
   "exclude": [
     "../node_modules"

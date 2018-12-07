@@ -1,9 +1,13 @@
 {
   "version": "1.0.0",
+  "scripts": {
+    "build": "rm -rf dist/ && tsc -p config/"
+  },
   "dependencies": {
     "lodash": "4.17.11"
   },
   "devDependencies": {
+    "@types/jquery": "3.3.23",
     "@types/lodash": "4.14.119",
     "typescript": "3.2.1"
   }
