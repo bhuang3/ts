@@ -9,9 +9,6 @@
   "compilerOptions": {
     "target": "es5",
 
-    /* Base directory to resolve non-absolute module names. [Relative to tsconfig.json] */
-    /* `baseUrl` is required when `paths` is specified. */
-
     /* TODO */
     // "module": "commonjs",
 
@@ -21,7 +18,7 @@
      */
     // "moduleResolution": "node",
 
-    /* All module imports with non-relative names are assumed to be relative to the baseUrl */
+    /* All module imports with non-relative names are assumed to be relative to the `baseUrl`. [Relative to tsconfig.json] */
     /* This must be specified if `paths` is */
     /*
      * https://stackoverflow.com/questions/50593774/cannot-find-typescript-module-even-though-tsc-successfully-manages-to-resolve-it
@@ -41,6 +38,9 @@
       "thor": [ "packages/thor/thor.ts" ],
     },
 
+    /* Specifies the root directory of input files */
+    "rootDir": "../src",
+  
     /* https://www.typescriptlang.org/docs/handbook/module-resolution.html#virtual-directories-with-rootdirs */
     /*
      * It's relative to `tsconfig.json` rather than `baseUrl`
@@ -65,7 +65,7 @@
   },
   "include": [
     "../src/**/*",
-    "../src/packages/**/*",
+    // "../src/packages/**/*",
   ],
   "exclude": [
     "../node_modules"
