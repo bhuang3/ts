@@ -64,8 +64,7 @@
     // ],
   },
   "include": [
-    "../src/**/*",
-    // "../src/packages/**/*",
+    "../src/typings/*",
   ],
   "exclude": [
     "../node_modules"
