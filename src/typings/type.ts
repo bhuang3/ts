@@ -6,6 +6,8 @@ interface RandomObject {
     a: number;
   };
   readonly fjfjg: Array<number>;
+  mdmdmf: ReadonlyArray<number>;
+  readonly jshdf: ReadonlyArray<number>;
 
   skdjkfjkf: number;
 };
@@ -15,19 +17,31 @@ let ro: RandomObject = {
     a: 1,
   },
   fjfjg: [1, 2, 3, 4, 5],
+  mdmdmf: [1, 2, 3],
+  jshdf: [0, 9, 1],
   skdjkfjkf: 123,
 };
 
 // CAN change value
 ro.asdasd.a = 123;
 
-// BUT CANNOT assign
+// BUT can NOT assign
 // ro.asdasd = { a: 123 };
 
-// CAN change value
+// CAN change item's value
 ro.fjfjg[1] = 23;
 
-// BUT CANNOT assign
+// CAN re-assign array
+ro.mdmdmf = [];
+// can NOT change item's value
+// ro.mdmdmf[0] = 123;
+
+// can NOT re-assign
+// ro.jshdf = [];
+// can NOT change item's value
+// ro.jshdf[1] = 222;
+
+// can NOT re-assign
 // ro.fjfjg = [1, 2, 3];
 
 interface RandomFunction {
@@ -47,3 +61,14 @@ interface IndexError {
   // [x : number]: TS; // error, must be subtype of `RandomObject`
   [y : string]: RandomObject;
 }
+
+// Class will be transpiled to JS code, but interface won't
+class RandomClass {
+  sjdjf: string;
+  dmvvjf: number;
+}
+
+let rc = new RandomClass();
+
+rc.sjdjf = '1asdasd';
+rc.dmvvjf = 1823;
