@@ -12,6 +12,10 @@ interface RandomObject {
   skdjkfjkf: number;
 };
 
+interface SubRandomObject extends RandomObject {
+  dlfjgjhj: string;
+};
+
 let ro: RandomObject = {
   asdasd: {
     a: 1,
@@ -44,13 +48,41 @@ ro.mdmdmf = [];
 // can NOT re-assign
 // ro.fjfjg = [1, 2, 3];
 
+// Defines a function interface
 interface RandomFunction {
   (a: number, b: number): boolean;
 };
 
+// Defines an interface with a property whose type is function
+interface RandomFunction2 {
+  // They're equivalent
+  fghh: (a: number, b: number) => boolean;
+  dfkf(a: number, b: number): boolean;
+};
+
 let rf: RandomFunction = (n1: number, n2: number) => {
   return n1 > n2;
-}
+};
+
+let rf2: RandomFunction2 = {
+  fghh: rf,
+  dfkf: rf,
+};
+
+interface MixedInterface {
+  (a: number, b: number): boolean;
+  djfg: number;
+  fun: () => string;
+};
+
+let mi: MixedInterface = <MixedInterface>((n1: number, n2: number) => {
+  return n1 > n2;
+});
+
+mi.djfg = 123;
+mi.fun = () => { return '123123123'; }
+
+let mi2: MixedInterface = <MixedInterface>({});
 
 interface IndexError {
   /*
@@ -58,12 +90,24 @@ interface IndexError {
   * support both types of indexers, but the type returned from a numeric indexer must be a
   * subtype of the type returned from the string indexer.
   */
-  // [x : number]: TS; // error, must be subtype of `RandomObject`
   [y : string]: RandomObject;
+
+  // error, must be subtype of `RandomObject`
+  // [x : number]: TS;
+
+  // error, the type of 'name' is not a subtype of the indexer
+  // name: string;
+
+  name: SubRandomObject;
 }
 
 // Class will be transpiled to JS code, but interface won't
 class RandomClass {
+  private fggg: string;
+
+  // Readonly properties must be initialized at their declaration or in the constructor.
+  readonly rrrrr: string;
+
   sjdjf: string;
   dmvvjf: number;
   // Tuple type: the order does matter
@@ -133,8 +177,68 @@ let ojgjr: number = nfohoek;
 // It has no runtime impact, and is used purely by the compiler
 let s1: Object = 'asdasd';
 
-// Type assertions have two forms. They are equivalent
+// Type assertions have two forms. They are equivalent.
 let len1 = (<string>s1).length;
-// Only as-style assertions are allowed while using with JSX
+// Only as-style assertions are allowed while using with JSX.
 let len2 = (s1 as string).length;
 
+
+interface InterfaceWithNew {
+  // constructor signature in interfaces are not implementable in classes.
+  // It's ONLY for defining a 'new'-able function with specified typed arguments.
+  // https://stackoverflow.com/questions/13407036/how-does-typescript-interfaces-with-construct-signatures-work
+  new (id: string, name: string);
+};
+
+// A class has two types: the type of the static side and the type of the instance side.
+// class ObjectImplementsInterface implements InterfaceWithNew {
+//   constructor(id: string, name: string) {
+
+//   }
+// }
+
+// When an interface type extends a class type it inherits the members of the class but not their implementations.
+// RandomClass contains private members
+interface InterfaceExtendClass extends RandomClass {}
+
+/*
+ * Interfaces inherit even the PRIVATE and PROTECTED members of a base class. That interface
+ * type can only be implemented by that class or a subclass of it.
+ */
+// Error
+// class ImplementExtendClass implements InterfaceExtendClass {}
+class ExtendRandomClass extends RandomClass implements InterfaceExtendClass {}
+
+class Cons {
+  // id: string;
+  // private name: string;
+
+  // constructor(id: string, name: string) {
+  //   this.id = id;
+  //   this.name = name;
+  // }
+  // 
+  // They're both equivalent.
+  //
+  constructor(readonly id: string, private name: string) {
+    
+  }
+
+  getName() {
+    return this.name;
+  }
+}
+
+let ccccc: Cons = new Cons('this is for id', 'this is for name');
+ccccc.id === 'this is id';
+ccccc.getName() === 'this is for name';
+
+function op(a: string, b: string = 'B') {
+  console.log(`${a} ${b}`);
+};
+
+op('A'); // `A B`
+op('A', undefined) // `A B`
+op('A', null) // `A null`
+// Error
+// op('A', 'B', 'C')
