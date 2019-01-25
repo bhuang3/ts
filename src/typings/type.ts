@@ -242,3 +242,30 @@ op('A', undefined) // `A B`
 op('A', null) // `A null`
 // Error
 // op('A', 'B', 'C')
+
+// You could provide an explicit this parameter.
+// `This` parameters are fake parameters that MUST be FIRST in the parameter list of a function.
+
+interface ofkgjhType {
+  str: string;
+  num: number;
+};
+
+let ofkgjh = {
+  str: 'string',
+  num: 123,
+  withoutThis: function() {
+    return () => {
+      // type of `this` is any
+      console.log(this.str, this.num);
+    };
+  },
+  withThis: function(this: ofkgjhType, param: any) {
+    return () => {
+      console.log(this.str, this.num, param);
+    };
+  },
+};
+
+let FF_ofkgjh = ofkgjh.withThis('kfkfk');
+FF_ofkgjh(); // 'string', 123, 'kfkfk'
