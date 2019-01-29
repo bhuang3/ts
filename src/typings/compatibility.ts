@@ -166,3 +166,53 @@ ccccsuper = ccccchild1;
 ccccsuper = ccccchild2;
 ccccchild1 = ccccchild2;
 
+
+// Generics
+// Since Typescript is a structural type system, type parameters only affect the
+// resulting type when consumed as part of the type of a member
+class CG1<T> {
+  a: string;
+}
+class CG2<T> {
+  a: string;
+}
+let cg11: CG1<string>;
+let cg12: CG1<number>;
+
+let cg21: CG2<string>;
+let cg22: CG2<number>;
+
+cg11 = cg12;
+cg21 = cg22;
+cg11 = cg21;
+cg11 = cg22;
+
+
+class CG3<T> {
+  a: T;
+}
+class CG4<T> {
+  a: T;
+}
+
+let cg31: CG3<string>;
+let cg32: CG3<number>;
+
+let cg41: CG3<string>;
+let cg42: CG3<number>;
+
+// cg31 = cg32; // Error, since the type parameter is consumed as part of the type of a memeber
+cg31 = cg41;
+cg32 = cg42;
+
+
+// Generic Functions: compatibility is checked by specifying `any` in place of all unspecified type arguments.
+let gf1 = function<T>(a: T): T {
+  return a;
+};
+let gf2= function<T>(b: T): T {
+  return b;
+};
+
+gf1 = gf2;
+
