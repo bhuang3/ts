@@ -135,6 +135,9 @@ rc.jdjdjf = [ 1, '', true ];
 // rc.mvng = 123;
 rc.mvng = null;
 rc.mvng = undefined;
+// `null` and `undefined` can be assigned to each other
+rc.pld = null;
+rc.jdbqq = undefined;
 
 rc.smallO = new Date();
 // rc.smallO = '';
