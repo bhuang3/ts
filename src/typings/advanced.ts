@@ -154,7 +154,7 @@ class DU2 {
   c: number;
 };
 interface DU3 {
-  a: 123123; // COMMON and SINGLETON type property. -- discriminant
+  a: '123123'; // COMMON and SINGLETON type property. -- discriminant
   d: number;
 }
 
@@ -169,7 +169,7 @@ function isDU2(val: DU123Alias): val is DU2 {
 };
 
 function isDU3(val: DU123Alias): val is DU3 {
-  return val.a === 123123; // type guards
+  return val.a === '123123'; // type guards
 };
 
 function JFKGLGJ1(val: DU123Alias): number {
@@ -183,3 +183,165 @@ function JFKGLGJ1(val: DU123Alias): number {
     return val; // type of val is `never`
   }
 }
+
+function JFKGLGJ2(val: DU123Alias): number {
+  switch (val.a) {
+    case 'a1':
+      return val.b;
+    case STEEE1.A:
+      return val.c;
+    case '123123':
+      return val.d;
+    default:
+      return val; // type of val is `never`
+  }
+}
+
+
+// Polymorphic `this` types: it represents a type that is the subtype of the containing class or interface.
+class THISSUPER {
+  public superTHIS(): this {
+    return this;
+  }
+
+  public super(): THISSUPER {
+    return this;
+  }
+};
+class THISCHILD extends THISSUPER {
+  public childTHIS(): this {
+    return this;
+  }
+
+  public child(): THISCHILD {
+    return this;
+  }
+};
+
+// Since it's polymorphic `this` type, so you can extend it and the new class CAN use OLD methods with NO changes.
+let this1: THISCHILD = new THISCHILD();
+// you can use new method after use old method
+this1.childTHIS().superTHIS().superTHIS().childTHIS(); // and so on ... ...
+
+let this2: THISCHILD = new THISCHILD();
+
+this2.child().super();
+this2.childTHIS().super();
+
+// Error, can NOT use new method after using old method.
+//
+// this2.super().child();
+// this2.super().childTHIS();
+
+
+// Index Types
+// 1. index type query operator: `keyof T` (is UNION of known).
+// It will automatically reflect the changes if we add another property.
+//
+interface IT11 {
+  adasd: string;
+  dkfjg: number;
+};
+class IT12 {
+  ghh: string;
+  pqoe: number;
+};
+
+let it1: keyof IT11; // interchangeable with `"adasd" | "dkfjg"`
+let it2: keyof IT12; // interchagneable with `"ghh" | "pqoe"`
+
+// 2. indexed access operator: `T[K]`
+function IUYT<T, K extends keyof T>(obj: T, prop: K): T[K] {
+  return obj[prop];
+}
+
+
+// Mapped Types: create new types based on old types
+interface MTT {
+  dlfjg: number;
+};
+interface MTTT {
+  dkfjjg: string;
+  fkghh: number;
+  gllh: MTT;
+};
+interface MTT1 {
+  dklg: string;
+  fkgjh: number;
+  pkp: MTTT;
+};
+
+// create readonly version for `MTT1`
+type ReadonlyMTTT<T> = {
+  readonly [P in keyof T]: ReadonlyMTTT<T[P]>; // nested
+};
+
+type OptionalMTTT<T> = {
+  [P in keyof T]?: OptionalMTTT<T[P]>; // nested
+};
+
+let mtttReadonly: ReadonlyMTTT<MTT1> = {
+  dklg: '',
+  fkgjh: 123,
+  pkp: {
+    dkfjjg: '44',
+    fkghh: 1,
+    gllh: {
+      dlfjg: 123,
+    }
+  },
+};
+
+//
+// Error for all below cases, since it's readonly
+//
+// mtttReadonly.dklg = '123';
+// mtttReadonly.fkgjh = 333;
+// mtttReadonly.pkp = {};
+// mtttReadonly.pkp.dkfjjg = '';
+// mtttReadonly.pkp.fkghh = 12312;
+// mtttReadonly.pkp.gllh.dlfjg = 12312;
+
+// each property is optional.
+let mtttOptional: OptionalMTTT<MTT1> = {
+  // dklg: '',
+  fkgjh: 123,
+  pkp: {
+    dkfjjg: '44',
+    // fkghh: 1,
+  },
+};
+
+// Conditional Types: select one of two possible types based on a condition expressed as a type relationship test
+//
+// T extends U ? X : Y
+//
+// A conditional type is either resolved to X or Y, or deferred because the
+// condition depends on one ore more type variables.
+//
+
+// Immediately resolved
+type CTT11<T> = T extends string ? string : number;
+
+let ct1: CTT11<string>; // ct1 is `string`
+let ct2: CTT11<{}>; // ct2 is `number`
+
+// Deferred
+declare function fffD<T>(x: T): T extends string ? string : boolean;
+
+function FDDF<U>(x: U) {
+  let a = fffD(x);
+
+  // Error, since x is not determined yet.
+  // let bsss: string = a;
+  // let bbbb: boolean = a;
+  let bsbs: string | boolean = a;
+}
+
+
+// Distributive Conditional Types: automatically distributed over union types during instantiation
+//
+// T extends U ? X : Y with the type argument A | B | C for T is resolved as
+//
+// (A extends U ? X : Y) | (B extends U ? X : Y) | (C extends U ? X : Y)
+//
