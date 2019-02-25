@@ -280,6 +280,11 @@ type OptionalMTTT<T> = {
   [P in keyof T]?: OptionalMTTT<T[P]>; // nested
 };
 
+type KdlfjtkT = {
+  [key: string]: string;
+  [key: number]: string;
+};
+
 let mtttReadonly: ReadonlyMTTT<MTT1> = {
   dklg: '',
   fkgjh: 123,
@@ -338,6 +343,25 @@ function FDDF<U>(x: U) {
   let bsbs: string | boolean = a;
 }
 
+type BoxedValue<T> = { value: T };
+type BoxedArray<T> = { array: T[] };
+type Boxed01<T> = T extends any[] ? BoxedArray<T[number]> : BoxedValue<T>;
+//
+// Error, since if T is array, `T[string]` is not allowed.
+//
+// type Boxed02<T> = T extends any[] ? BoxedArray<T[string]> : BoxedValue<T>;
+
+type Boxed11<T> = T extends any ? BoxedArray<T[string]> : BoxedValue<T>;
+type Boxed12<T> = T extends any ? BoxedArray<T[number]> : BoxedValue<T>;
+type Boxed13<T> = T extends { [key: string]: string } ? BoxedArray<T[string]> : BoxedValue<T>;
+type Boxed14<T> = T extends { [key: number]: string } ? BoxedArray<T[number]> : BoxedValue<T>;
+//
+// Error, since T is Object using number as the type for key
+//
+// type Boxed15<T> = T extends { [key: number]: string } ? BoxedArray<T[string]> : BoxedValue<T>;
+
+let fdd: Boxed01<number[]>;
+
 
 // Distributive Conditional Types: automatically distributed over union types during instantiation
 //
@@ -345,3 +369,125 @@ function FDDF<U>(x: U) {
 //
 // (A extends U ? X : Y) | (B extends U ? X : Y) | (C extends U ? X : Y)
 //
+
+// The distributive property of conditional types can conveniently be used to filter union type
+type Diff<U, T> = U extends T ? never : U;
+
+// The type is 'b' | 'd', it filters out 'a' and 'c'
+let djfhgDiff: Diff<'a' | 'b' | 'c' | 'd', 'a' | 'c' | 'e'>;
+
+type __NonNullable__<T> = T extends null | undefined ? T : T;
+
+function _djfhgk_fun_<T>(prop1: T, prop2: __NonNullable__<T>) {
+  prop1 = prop2;
+  console.log(prop1, prop2);
+  // prop2 = prop1; // Error, could not assign
+}
+
+_djfhgk_fun_(123, 123);
+_djfhgk_fun_('', '');
+_djfhgk_fun_(null, null); // still could pass null
+_djfhgk_fun_(undefined, undefined); // still could pass undefined
+
+
+// Conditional types are particularly useful when combined with mapped types
+//
+// Don't forget `[keyof T]`
+//
+type __FunctionPropertyNames__<T> = { [K in keyof T]: T[K] extends Function ? K : never }[keyof T];
+
+interface fkfjgkg {
+  dkfjgk(): void;
+  gkhjh: string;
+  fkgjh: number;
+  fjgj(prop: string): boolean;
+};
+
+let __fff: __FunctionPropertyNames__<fkfjgkg>;
+
+__fff = 'dkfjgk';
+__fff = 'fjgj';
+// __fff = 'fkgjh' // Error
+
+
+// Similar to union and intersection types, conditional types are NOT permitted to
+// reference themselves recursively, since they're NOT generic type
+//
+// Error
+// type __BoArray02<T> = T extends any[] ? __BoArray02<T> : T;
+//
+
+// Generic types can reference them recursively
+type __BoArray01<T> = { array: __BoArray01<T>[] };
+interface __BoType {
+  name: string;
+}
+
+let _bo: __BoArray01<__BoType> = {
+  array: [ { array: [ { array: [ ] } ] } ],
+}
+
+
+// WITHIN the `extends` clause of a conditional type, it's possible to have `infer` declaration
+//
+// get function's return type
+type __ReturnType01<T> = T extends (...args: any[]) => infer R ? R : T;
+
+function __fffff01(a: string, b: number): boolean { return false };
+function __fffff02(a: string, b: number): string { return 'selkkfjg' };
+
+// boolean
+let __jfghgj01: __ReturnType01<typeof __fffff01>;
+// string
+let __jfghgj02: __ReturnType01<typeof __fffff02>;
+
+// Error, MUST have `infer`
+// type __ReturnType<T> = T extends (...args: any[]) => R ? R : T;
+
+// The following two cases are different from each other;
+//
+// It makes it through to the Javascript, and it will use the Javascript `typeof` operator at runtime
+// and produce a string, eg. 'boolean' | 'string' | 'number' | 'function' | 'object' | 'undefined' | ...
+//
+// The type of `__typeof__fffff0101` is 'boolean' | 'string' | 'number' | 'function' | 'object' | 'undefined' | ...
+// But since `__fffff01` is a function, the eventual value assigned to it would be 'function'
+//
+let __typeof__fffff0101 = typeof __fffff01;
+
+//
+// It will be erased after being compiled, and it's using the Typescript type query operator
+//
+// __typeof__fffff0102 is `(a: number, b: number) => boolean`
+type __typeof__fffff0102 = typeof __fffff01; // or used in type parameter position: __ReturnType01<typeof __fffff02>
+
+
+//
+// Covariance vs Contravariance: https://www.stephanboyer.com/post/132/what-are-covariance-and-contravariance
+//
+// Covariance: C is subtype of S ---> ( (arg: T) => C ) is subtype of ( (arg: T) => S )
+//
+// Contravariance: C is subtype of S ---> ( (arg: S) => T ) is subtype of ( (arg: C) => T )
+
+// Produce UNION type since they are at COVARIANCE positions. **(ONLY realated to POSITION)**
+type __ReturnType02<T> = T extends { a: infer U, b: infer U } ? U : never;
+
+// the type is `string`
+let kfjg01: __ReturnType02<{ a: string; b: string}>;
+// UNION: the type is `string | number`
+let kfjg02: __ReturnType02<{ a: string; b: number }>;
+
+
+// Produce INTERSECTION type since they are at CONTRAVARIANCE positions.
+type __ReturnType03<T> = T extends { a: (x: infer U) => void; b: (x: infer U) => void } ? U : T;
+
+// the type is `string`
+let kfjg03: __ReturnType03<{ a: (ax: string) => void; b: (bx: string) => void }>;
+// INTERSECTION: the type is `string & number`
+let kfjg04: __ReturnType03<{ a: (ax: string) => void; b: (bx: number) => void }>;
+
+
+// It is NOT possible to use `infer` declarations in constraint clauses for regular type parameters.
+//
+// Error, 'infer' declarations are ONLY permitted in the 'extends' clause of a conditional type.
+//
+// type __ReturnType04<T extends { a: infer U }> = U;
