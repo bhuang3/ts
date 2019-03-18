@@ -8,6 +8,12 @@ export class ABC {
 
 };
 
+export function FFF() {
+  console.log('export FFF from `modules.export.ts`');
+}
+
+export let VVV : number = 123;
+
 class AAA {
 
 };
@@ -53,7 +59,7 @@ export { AAA };
 //
 // `export =` and `import = require()`
 //
-// The `export = ` specifies a single object that is exported from the module. It can be a class, interface
+// The `export = ` specifies a SINGLE object that is exported from the module. It can be a class, interface
 // namespace, function or enum.
 //
 
@@ -65,3 +71,7 @@ class KDHFG {}
 //
 
 // Has to be imported by: import djf = require('./module');
+//
+//////////////////////////////////////////////////////////////////////////////////////////////////////
+
+
