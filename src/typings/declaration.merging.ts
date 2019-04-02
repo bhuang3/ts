@@ -29,3 +29,17 @@
  */
 
 
+ /**
+  * `Namespace` with `Class`, `Function` and `Enum`: To do so, the namespace declaration must follow the declaration it
+  *  will merge with. The resulting declaration has properties of both declaration types.
+  *   1.  With `Class`, the visibility rules for merged members are the same as `merging namespaces`.
+  *       Namespace `must export memebers` for the merged classes to see them.
+  *   2.  With `Function`, create the function, then extend the function further by adding properties.
+  *   3.  With `Enum`, namespaces can be used to extend enums with static members.
+ **/
+
+
+ // Classes can NOT merge with other classes or with variables.
+ // JavaScript modules do not support merging, but you can patch existing objects by importing and then updating them.
+
+ 
